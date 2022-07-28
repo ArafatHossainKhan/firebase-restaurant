@@ -12,7 +12,7 @@ import { app } from "../../firebase.config";
 const Header = () => {
 const firebaseAuth = getAuth(app);
 const provider = new GoogleAuthProvider();
-const [{user}, dispatch] = useStateValue()
+const [{user, cartItems, cartShow}, dispatch] = useStateValue()
 const [isMenu, setIsMenu] = useState(false)
 
 
@@ -38,6 +38,12 @@ const [isMenu, setIsMenu] = useState(false)
       user: null
     })
   }
+  const showCart = () => {
+    dispatch({
+      type: actionType.SET_CART_SHOW,
+      cartShow: !cartShow
+    })
+  }
   return (
     <header className='fixed z-50 w-screen p-3 px-4 md:px-16 bg-bagroundColor'>
          {/* desktop and tablet */}
@@ -57,11 +63,13 @@ const [isMenu, setIsMenu] = useState(false)
             <Link to={'/createItem'} className="text-base text-textColor hover:text-red-600 duration-300 transition-all ease-in-out cursor-pointer">About us</Link>
             <li className="text-base text-textColor hover:text-red-600 duration-300 transition-all ease-in-out cursor-pointer">Service</li>
           </motion.ul>
-          <div className='flex items-center justify-center relative'>
+          <div className='flex items-center justify-center relative' onClick={showCart}>
                 <CgShoppingCart className='text-textColor text-2xl ml-8 cursor-pointer'/>
-                  <div className='absolute top-0 right-0 w-4 h-4 rounded-full bg-cartNumBg flex items-center justify-center'>
-                    <p className='text-sm text-white'>3</p>
-                  </div>
+                 {cartItems && cartItems.length > 0 && (
+                   <div className='absolute top-0 right-0 w-4 h-4 rounded-full bg-cartNumBg flex items-center justify-center'>
+                   <p className='text-sm text-white'>3</p>
+                 </div>
+                 )}
           </div>
 
           <div className="relative">
@@ -105,11 +113,13 @@ const [isMenu, setIsMenu] = useState(false)
         <div className='flex items-center justify-between md:hidden'>
 
         
-         <div className='flex items-center justify-center relative'>
+         <div className='flex items-center justify-center relative' onClick={showCart}>
                 <CgShoppingCart className='text-textColor text-2xl cursor-pointer'/>
-                  <div className='absolute -top-3.5 -right-0.5 w-4 h-4 rounded-full bg-cartNumBg flex items-center justify-center'>
-                    <p className='text-sm text-white'>3</p>
+                {cartItems && cartItems.length > 0 && (
+                  <div className='absolute top-0 right-0 w-4 h-4 rounded-full bg-cartNumBg flex items-center justify-center'>
+                   <p className='text-sm text-white'>3</p>
                   </div>
+                 )}
           </div>
               
           <Link to={"/"} className='flex items-center justify-center gap-2'>
