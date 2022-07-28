@@ -11,7 +11,7 @@ function App() {
 
 
   const [{foodItems}, dispatch] = useStateValue();
-  console.log(foodItems)
+
   
   const fetchData =  () => {
     getAllFoodItems().then((data) => {

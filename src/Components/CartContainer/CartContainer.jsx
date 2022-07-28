@@ -1,8 +1,10 @@
 import { motion } from "framer-motion"
-import React from 'react'
+import React, { useState } from 'react'
 import { BiMinus, BiPlus } from "react-icons/bi"
 import { MdOutlineKeyboardBackspace } from "react-icons/md"
 import { RiRefreshFill } from "react-icons/ri"
+import { v4 as uuidv4 } from 'uuid'
+import EmptyCart from "../../assets/emptyCart.svg"
 import { actionType } from "../../context/reducer"
 import { useStateValue } from "../../context/StateProvider"
 
@@ -10,7 +12,29 @@ import { useStateValue } from "../../context/StateProvider"
 
 const CartContainer = () => {
 
-    const [{cartShow, cartItems},dispatch] = useStateValue();
+    const [{cartShow, cartItems, user},dispatch] = useStateValue();
+    const [qty, setQty] = useState(1)
+    const [items, setItems] = useState([])
+
+    const cartDispatch = () => {
+        dispatch({
+            type: actionType.SET_CART,
+            cartItems : items
+        })
+    }
+ 
+    const updateQty = (action, id) => {
+        // if(action === "add") {
+        //     setQty(prev => prev + 1)
+        //     cartItems.map((item) => {
+        //         if(item.id === id) {
+        //             item.qty +=1
+        //         }
+        //     })
+        //     cartDispatch()
+        // }
+       
+    }
 
     const showCart = ()=> {
         dispatch({
@@ -18,6 +42,8 @@ const CartContainer = () => {
             cartShow: !cartShow
         })
     }
+
+
   return (
     <motion.div
         initial={{opacity: 0, x:200}}
@@ -30,61 +56,71 @@ const CartContainer = () => {
             </motion.div>
 
             <p className="text-textColor text-lg font-semibold">Cart</p>
-            <motion.p whileTap={{scale: 0.75}} className="flex items-center gap-2 p-1 px-2 my-2 bg-gray-100 rounded-md hover:shadow-md duration-100 ease-in-out transition-all cursor-pointer text-textColor text-base">Clear <RiRefreshFill className="text-textColor text-3xl"/></motion.p>
-         </div>
+            <motion.p whileTap={{scale: 0.75}} className="flex items-center gap-2 p-1 px-2 my-2 bg-gray-100 rounded-md hover:shadow-md duration-100 ease-in-out transition-all cursor-pointer text-textColor text-base">Clear <RiRefreshFill onClick={() => dispatch({type: actionType.SET_CART_ITEMS, cartItems: [...cartItems, 0]})} className="text-textColor text-3xl"/></motion.p>
+        </div>
                         {/* Bottom section */}
-         <div className="w-full h-full bg-primary rounded-t-[2rem] flex flex-col">
+        {cartItems && cartItems.length > 0 ? (
+             <div className="w-full h-full bg-primary rounded-t-[2rem] flex flex-col">
 
-            <div className="w-full h-340 md:h-42 px-6 py-10 flex flex-col gap-3 overflow-y-scroll scrollbar-none">
-                        {/* cart items */}
-
-                {cartItems && cartItems.map((e) => (
-                     <div className="w-full p-1 px-2 rounded-lg bg-cardOverlay flex items-center gap-2 text-white">
-                     <img src={e.imageUrl} alt="" className="w-20 h-20 max-w-[60px] object-contain rounded-full "/>
+                <div className="w-full h-340 md:h-42 px-6 py-10 flex flex-col gap-3 overflow-y-scroll scrollbar-none">
+                            {/* cart items */}
+    
+                    {cartItems && cartItems.map((e,) => (
+                    <div key={uuidv4()} className="w-full p-1 px-2 rounded-lg bg-cardOverlay flex items-center gap-2 text-white">
+                        <img src={e.imageUrl} alt="" className="w-20 h-20 max-w-[60px] object-contain rounded-full "/>
+    
+                        {/* name section */}
+                        <div className="flex flex-col gap-1">
+                            <p className="text-base text-black">{e.title}</p>
+                            <p className="text-black text-sm font-semibold">${parseFloat(e.price * qty)}</p>
+                        </div>
+    
+                        {/* button */}
+                        <div className="group flex items-center gap-2 ml-auto cursor-pointer">
+                            <motion.div whileTap={{scale: 0.75}}  onClick={() => updateQty("remove", e.id)}>
+                                <BiMinus className="text-black text-xl"/>
+                            </motion.div>
+                            <p className="w-5 h-5 bg-red-500 text-sm flex items-center justify-center rounded-full">1</p>
+                            <motion.div whileTap={{scale: 0.75}} onClick={() => updateQty("add", e.id)}>
+                                <BiPlus className="text-black text-xl"/>
+                            </motion.div>
+                        </div>
+                    </div>
+                 ))}
+                
+             </div>
  
-                      {/* name section */}
-                     <div className="flex flex-col gap-1">
-                         <p className="text-base text-black">{e.title}</p>
-                         <p className="text-black text-sm font-semibold">${e.price}</p>
-                     </div>
- 
-                     {/* button */}
-                     <div className="group flex items-center gap-2 ml-auto cursor-pointer">
-                         <motion.div whileTap={{scale: 0.75}}>
-                             <BiMinus className="text-black text-xl"/>
-                         </motion.div>
-                         <p className="w-5 h-5 bg-red-500 text-sm flex items-center justify-center rounded-full">1</p>
-                         <motion.div whileTap={{scale: 0.75}}>
-                             <BiPlus className="text-black text-xl"/>
-                         </motion.div>
-                     </div>
+             <div className="w-full flex-1 bg-cardOverlay rounded-t-[2rem] flex flex-col items-center justify-evenly px-8 py-2">
+                 <div className="w-full flex items-center justify-between">
+                     <p className="text-black text-lg">Sub Total</p>
+                     <p className="text-black text-lg">$ 8.5</p>
                  </div>
-                ))}
-               
-            </div>
-
-            <div className="w-full flex-1 bg-cardOverlay rounded-t-[2rem] flex flex-col items-center justify-evenly px-8 py-2">
-                <div className="w-full flex items-center justify-between">
-                    <p className="text-black text-lg">Sub Total</p>
-                    <p className="text-black text-lg">$ 8.5</p>
-                </div>
-
-                <div className="w-full flex items-center justify-between">
-                    <p className="text-black text-lg">Delivery</p>
-                    <p className="text-black text-lg">$ 8.5</p>
-                </div>
-                <div className="w-full border-b border-gray-600 my-2"></div>
-                <div className="w-full flex items-center justify-between">
-                    <p className="text-black text-xl font-semibold">Total</p>
-                    <p className="text-black text-xl font-semibold">$ 11</p>
-                </div>
-                <motion.button
-                    
+ 
+                 <div className="w-full flex items-center justify-between">
+                     <p className="text-black text-lg">Delivery</p>
+                     <p className="text-black text-lg">$ 8.5</p>
+                 </div>
+                 <div className="w-full border-b border-gray-600 my-2"></div>
+                 <div className="w-full flex items-center justify-between">
+                     <p className="text-black text-xl font-semibold">Total</p>
+                     <p className="text-black text-xl font-semibold">$ 11</p>
+                 </div>
+                 {user && user ? (
+                    <motion.button
                     whileTap={{scale: 0.8}} className="w-full p-2 rounded-full bg-gradient-to-tr from-red-400 to-red-600 text-white text-lg my-2  hover:shadow-lg">Check Out</motion.button>
-            </div>
-
-            
-         </div>
+                 ): <motion.button
+                 whileTap={{scale: 0.8}} className="w-full p-2 rounded-full bg-gradient-to-tr from-red-400 to-red-600 text-white text-lg my-2  hover:shadow-lg">Login to checkout</motion.button>}
+                    
+             </div>
+ 
+             
+          </div>
+        ):
+        <div className="w-full h-full flex flex-col items-center justify-center gap-6">
+            <img src={EmptyCart} alt="empty-cart"/>
+            <p className="text-xl text-textColor font-semibold">Add Some items to your cart</p>
+        </div>}
+        
          
     </motion.div>
   )

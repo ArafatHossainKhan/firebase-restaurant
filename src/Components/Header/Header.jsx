@@ -67,7 +67,7 @@ const [isMenu, setIsMenu] = useState(false)
                 <CgShoppingCart className='text-textColor text-2xl ml-8 cursor-pointer'/>
                  {cartItems && cartItems.length > 0 && (
                    <div className='absolute top-0 right-0 w-4 h-4 rounded-full bg-cartNumBg flex items-center justify-center'>
-                   <p className='text-sm text-white'>3</p>
+                   <p className='text-sm text-white'>{cartItems.length}</p>
                  </div>
                  )}
           </div>
@@ -117,7 +117,7 @@ const [isMenu, setIsMenu] = useState(false)
                 <CgShoppingCart className='text-textColor text-2xl cursor-pointer'/>
                 {cartItems && cartItems.length > 0 && (
                   <div className='absolute top-0 right-0 w-4 h-4 rounded-full bg-cartNumBg flex items-center justify-center'>
-                   <p className='text-sm text-white'>3</p>
+                   <p className='text-sm text-white'>{cartItems.length}</p>
                   </div>
                  )}
           </div>
