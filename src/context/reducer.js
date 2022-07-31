@@ -28,11 +28,7 @@ const reducer = (state, action) => {
                 ...state,
                 cartItems:  action.cartItems,
             }
-            case actionType.SET_CART:
-            return{
-                ...state,
-                cartItems:  action.cartItems,
-            }
+           
             
         default:
             return state;

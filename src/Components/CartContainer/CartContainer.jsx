@@ -1,40 +1,27 @@
 import { motion } from "framer-motion"
-import React, { useState } from 'react'
-import { BiMinus, BiPlus } from "react-icons/bi"
+import { useEffect, useState } from "react"
+
+
 import { MdOutlineKeyboardBackspace } from "react-icons/md"
 import { RiRefreshFill } from "react-icons/ri"
+
 import { v4 as uuidv4 } from 'uuid'
 import EmptyCart from "../../assets/emptyCart.svg"
 import { actionType } from "../../context/reducer"
 import { useStateValue } from "../../context/StateProvider"
+import CartItems from "../CartItems/CartItems"
+
 
 
 
 const CartContainer = () => {
 
     const [{cartShow, cartItems, user},dispatch] = useStateValue();
-    const [qty, setQty] = useState(1)
-    const [items, setItems] = useState([])
-
-    const cartDispatch = () => {
-        dispatch({
-            type: actionType.SET_CART,
-            cartItems : items
-        })
-    }
+    const [total, setTotal] = useState()
+    const [flag, setFlag] = useState(0)
  
-    const updateQty = (action, id) => {
-        // if(action === "add") {
-        //     setQty(prev => prev + 1)
-        //     cartItems.map((item) => {
-        //         if(item.id === id) {
-        //             item.qty +=1
-        //         }
-        //     })
-        //     cartDispatch()
-        // }
-       
-    }
+
+   
 
     const showCart = ()=> {
         dispatch({
@@ -42,6 +29,13 @@ const CartContainer = () => {
             cartShow: !cartShow
         })
     }
+    useEffect(() => {
+        let totalPrice = cartItems.reduce(function (acc, item) {
+            return acc + item.qty * item.price
+        },0)
+        setTotal(totalPrice)
+      
+    },[flag, cartItems])
 
 
   return (
@@ -65,27 +59,8 @@ const CartContainer = () => {
                 <div className="w-full h-340 md:h-42 px-6 py-10 flex flex-col gap-3 overflow-y-scroll scrollbar-none">
                             {/* cart items */}
     
-                    {cartItems && cartItems.map((e,) => (
-                    <div key={uuidv4()} className="w-full p-1 px-2 rounded-lg bg-cardOverlay flex items-center gap-2 text-white">
-                        <img src={e.imageUrl} alt="" className="w-20 h-20 max-w-[60px] object-contain rounded-full "/>
-    
-                        {/* name section */}
-                        <div className="flex flex-col gap-1">
-                            <p className="text-base text-black">{e.title}</p>
-                            <p className="text-black text-sm font-semibold">${parseFloat(e.price * qty)}</p>
-                        </div>
-    
-                        {/* button */}
-                        <div className="group flex items-center gap-2 ml-auto cursor-pointer">
-                            <motion.div whileTap={{scale: 0.75}}  onClick={() => updateQty("remove", e.id)}>
-                                <BiMinus className="text-black text-xl"/>
-                            </motion.div>
-                            <p className="w-5 h-5 bg-red-500 text-sm flex items-center justify-center rounded-full">1</p>
-                            <motion.div whileTap={{scale: 0.75}} onClick={() => updateQty("add", e.id)}>
-                                <BiPlus className="text-black text-xl"/>
-                            </motion.div>
-                        </div>
-                    </div>
+                    {cartItems && cartItems.map((e) => (
+                        <CartItems flag={flag} setFlag={setFlag} total={total} data={e} key={uuidv4()}/>
                  ))}
                 
              </div>
@@ -103,7 +78,7 @@ const CartContainer = () => {
                  <div className="w-full border-b border-gray-600 my-2"></div>
                  <div className="w-full flex items-center justify-between">
                      <p className="text-black text-xl font-semibold">Total</p>
-                     <p className="text-black text-xl font-semibold">$ 11</p>
+                     <p className="text-black text-xl font-semibold">$ {total}</p>
                  </div>
                  {user && user ? (
                     <motion.button
