@@ -4,6 +4,7 @@ import { BiMinus, BiPlus } from "react-icons/bi"
 import { v4 as uuidv4 } from 'uuid'
 import { actionType } from '../../context/reducer'
 import { useStateValue } from "../../context/StateProvider"
+let cartData = []
 
 const CartItems = ({data, flag, setFlag}) => {
 
@@ -30,7 +31,7 @@ const CartItems = ({data, flag, setFlag}) => {
         switch (action) {
             case actionTyp.ADD :
                 
-                cartItems.map((item) => {
+                cartItems.forEach((item) => {
                             setQty(prev => prev + 1)
                             if(item.id === id) {
                                 item.qty +=1
@@ -45,11 +46,11 @@ const CartItems = ({data, flag, setFlag}) => {
                 break;
                 
             case actionTyp.REMOVE :
-                cartItems.map((item) => {
+                cartItems.forEach((item) => {
                     setQty(prev => prev - 1)
                     if(item.id === id) {
-                        if(item.qty < 2) {
-                           
+                        if(item.qty === 1) {
+                           cartData.pop(id)
                             
                         } else {
                             item.qty -=1
@@ -101,6 +102,7 @@ const CartItems = ({data, flag, setFlag}) => {
         
     
     useEffect(() => {
+        cartData = cartItems
         setItems(cartItems)
     }, [qty, cartItems])
   return (
