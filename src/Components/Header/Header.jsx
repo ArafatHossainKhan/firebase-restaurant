@@ -4,7 +4,7 @@ import React, { useState } from 'react';
 import { CgAdd, CgLogOut, CgShoppingCart } from "react-icons/cg";
 import { Link } from "react-router-dom";
 import Avatar from '../../assets/avatar.png';
-import Logo from "../../assets/logo.png";
+import Logo from "../../assets/looo.png";
 import { actionType } from "../../context/reducer";
 import { useStateValue } from "../../context/StateProvider";
 import { app } from "../../firebase.config";
@@ -50,7 +50,7 @@ const [isMenu, setIsMenu] = useState(false)
         <div className='hidden md:flex w-full h-ful '>
           <Link to={"/"} className='flex items-center gap-2'>
             <img src={Logo} alt="logo" className='w-10 object-cover'/>
-            <p className='text-headingColor text-xl font-bold'>City</p>
+            <p className='text-headingColor text-lg font-bold'>Food Shop</p>
           </Link>
 
           <motion.ul 
