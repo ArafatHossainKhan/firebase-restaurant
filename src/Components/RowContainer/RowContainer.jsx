@@ -10,13 +10,19 @@ const RowContainer = ({flag, data, scrollValue}) => {
   
     const rowContainer = useRef()
     const [{cartItems}, dispatch] = useStateValue()
+
+   
+
     const addtocart = (item) => {
-    
+        
+    // const filterCart = cartItems.find((i) => i.id  === item.id)
+   
+
     dispatch({
         type: actionType.SET_CART_ITEMS,
         cartItems: [...cartItems, item]
     })
-   
+  
    }
 
     useEffect(() => {
@@ -26,6 +32,7 @@ const RowContainer = ({flag, data, scrollValue}) => {
 
    useEffect(() => {
     localStorage.setItem("cartItems", JSON.stringify(cartItems))
+
    }, [cartItems])
 
  
@@ -34,7 +41,7 @@ const RowContainer = ({flag, data, scrollValue}) => {
     <div ref={rowContainer} className={`w-full  ${flag ? 'overflow-x-scroll scrollbar-none' : 'overflow-x-hidden flex-wrap justify-center'} flex items-center mt-8 gap-3 scroll-smooth`}>
         {data && data.length > 0 ? (
             data?.map((item) => (
-                <div key={`${item.name}+${item.id}`} className='w-275  h-[235px] my-6 min-w-[275px] md:min-w-[300px] md:w-300 p-4 bg-cardOverlay rounded-lg backdrop-blur-lg hover:drop-shadow-xl flex flex-col items-center justify-between'>
+                <div key={`${item.name}+${item.id}`} className='w-350  h-[235px] my-6 min-w-[275px] md:min-w-[300px] md:w-300 p-4 bg-cardOverlay rounded-lg backdrop-blur-lg hover:drop-shadow-xl flex flex-col items-center justify-between'>
                     <div className='w-full flex items-center justify-between mt-12 '>
                         <motion.div whileHover={{scale: 1.1}} className=" -mt-20 drop-shadow-2xl">
                         <img  src={item.imageUrl} alt='' className='w-40 h-40 object-contain'/>

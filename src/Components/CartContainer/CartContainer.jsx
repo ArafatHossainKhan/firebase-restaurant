@@ -36,6 +36,10 @@ const CartContainer = () => {
         setTotal(totalPrice)
       
     },[flag, cartItems])
+    const handelClicked = () => (
+        dispatch({type: actionType.SET_CART_ITEMS, cartItems: []})
+
+    )
 
 
   return (
@@ -50,7 +54,7 @@ const CartContainer = () => {
             </motion.div>
 
             <p className="text-textColor text-lg font-semibold">Cart</p>
-            <motion.p whileTap={{scale: 0.75}} className="flex items-center gap-2 p-1 px-2 my-2 bg-gray-100 rounded-md hover:shadow-md duration-100 ease-in-out transition-all cursor-pointer text-textColor text-base">Clear <RiRefreshFill onClick={() => dispatch({type: actionType.SET_CART_ITEMS, cartItems: [...cartItems, 0]})} className="text-textColor text-3xl"/></motion.p>
+            <motion.p whileTap={{scale: 0.75}}  onClick={handelClicked} className="flex items-center gap-2 p-1 px-2 my-2 bg-gray-100 rounded-md hover:shadow-md duration-100 ease-in-out transition-all cursor-pointer text-textColor text-base">Clear <RiRefreshFill className="text-textColor text-3xl"/></motion.p>
         </div>
                         {/* Bottom section */}
         {cartItems && cartItems.length > 0 ? (

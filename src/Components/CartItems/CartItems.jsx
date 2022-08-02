@@ -11,6 +11,11 @@ const CartItems = ({data, flag, setFlag}) => {
     const [items, setItems] = useState([])
     const [{ cartItems},dispatch] = useStateValue();
 
+    const actionTyp = {
+        ADD : "ADD",
+        REMOVE : "REMOVE"
+    }
+
     const cartDispatch = () => {
         localStorage.setItem('cartItems', JSON.stringify(cartItems))
         dispatch({
@@ -20,40 +25,76 @@ const CartItems = ({data, flag, setFlag}) => {
     }
  
     const updateQty = (action, id) => {
-        if(action === "add") {
-            // eslint-disable-next-line array-callback-return
-            cartItems.map((item) => {
-                setQty(prev => prev + 1)
-                if(item.id === id) {
-                    item.qty +=1
-                    setFlag(prev => prev +1)
-                    
-                    
-                }
+
+
+        switch (action) {
+            case actionTyp.ADD :
                 
-            })
-            cartDispatch()
-            console.log("add")
-           
-        }  else {
-                if(qty >= 1) {
+                cartItems.map((item) => {
+                            setQty(prev => prev + 1)
+                            if(item.id === id) {
+                                item.qty +=1
+                                setFlag(prev => prev +1)   
+                            }
+                            
+                        })
+                        cartDispatch()
+                        
+                        
+                 
+                break;
+                
+            case actionTyp.REMOVE :
+                cartItems.map((item) => {
                     setQty(prev => prev - 1)
-                    // eslint-disable-next-line array-callback-return
-                    cartItems.map((item) => {
-                                
-                                if(item.id === id) {
-                                    item.qty -=1
-                                    setFlag(prev => prev - 1)
-                                }
-                                
-                            })
-                            cartDispatch()
-                            console.log("donw")
-                }
-             
-            }
+                    if(item.id === id) {
+                        if(item.qty < 2) {
+                           
+                            
+                        } else {
+                            item.qty -=1
+                            setFlag(prev => prev +1) 
+                        }
+                         
+                    }
+                   
+                })
+                cartDispatch()
+                break;
+                        
+            default: return console.log(qty)
+
+        }
+        // if(action === "add") {
+        //     // eslint-disable-next-line array-callback-return
+        //     cartItems.map((item) => {
+        //         setQty(prev => prev + 1)
+        //         if(item.id === id) {
+        //             item.qty +=1
+        //             setFlag(prev => prev +1)   
+        //         }
                 
+        //     })
+        //     cartDispatch()
+        //     console.log("add")
+           
+        // } else if (action === "remove") {
+        //     cartItems.map((item) => {
+        //         setQty(prev => prev - 1)
+        //         if(item.id === id) {
+        //             item.qty -=1
+        //             setFlag(prev => prev +1)   
+        //         }
                 
+        //     })
+        //     cartDispatch()
+        //         }
+        
+        // else {
+        //     if(qty === 1) {
+        //         setItems(cartItems.filter((e) => e.id !== id))
+        //     }
+        // }      
         }
                
             
@@ -75,11 +116,11 @@ const CartItems = ({data, flag, setFlag}) => {
     
                         {/* button */}
                         <div className="group flex items-center gap-2 ml-auto cursor-pointer">
-                            <motion.div whileTap={{scale: 0.75}}  onClick={() => updateQty("remove", data.id)}>
+                            <motion.div whileTap={{scale: 0.75}}  onClick={() =>updateQty(actionTyp.REMOVE, data.id)}>
                                 <BiMinus className="text-black text-xl"/>
                             </motion.div>
                             <p className="w-5 h-5 bg-red-500 text-sm flex items-center justify-center rounded-full">{data.qty}</p>
-                            <motion.div whileTap={{scale: 0.75}} onClick={() => updateQty("add", data.id)}>
+                            <motion.div whileTap={{scale: 0.75}} onClick={() => updateQty(actionTyp.ADD, data.id)}>
                                 <BiPlus className="text-black text-xl"/>
                             </motion.div>
                         </div>
